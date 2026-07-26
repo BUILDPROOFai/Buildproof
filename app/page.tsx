@@ -3,6 +3,7 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import ProjectDirectory from "@/components/ProjectDirectory";
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/types";
+export const dynamic = "force-dynamic";
 
 const LEVELS = [
   { n: 1, name: "Developer submitted" },
