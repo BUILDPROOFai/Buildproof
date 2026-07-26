@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import { createClient } from "@/lib/supabase/server";
 import type { Project, Profile } from "@/types";
 import SignOutButton from "@/components/SignOutButton";
+export const dynamic = "force-dynamic";
 
 export default async function AdminPortal() {
   const supabase = createClient();
