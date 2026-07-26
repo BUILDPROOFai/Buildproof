@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: theme('colors.paper');
+  }
+
+  ::selection {
+    background-color: theme('colors.seal');
+    color: white;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.seal');
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .label {
+    @apply font-mono text-xs uppercase tracking-widest text-muted;
+  }
+
+  .card {
+    @apply bg-panel border border-line rounded-2xl shadow-sm shadow-ink/[0.04];
+  }
+}
