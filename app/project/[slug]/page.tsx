@@ -3,6 +3,7 @@ import Nav from "@/components/Nav";
 import { createClient } from "@/lib/supabase/server";
 import { VERIFICATION_LEVEL_LABELS } from "@/types";
 import type { Project, Milestone, Evidence } from "@/types";
+export const dynamic = "force-dynamic";
 
 function timeAgo(dateString: string) {
   const days = Math.floor((Date.now() - new Date(dateString).getTime()) / 86400000);
