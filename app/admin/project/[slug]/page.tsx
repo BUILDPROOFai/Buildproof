@@ -5,6 +5,7 @@ import type { Project, Milestone, Evidence, Profile } from "@/types";
 import { VERIFICATION_LEVEL_LABELS } from "@/types";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelect";
 import EvidenceUploadForm from "@/components/EvidenceUploadForm";
+export const dynamic = "force-dynamic";
 
 export default async function AdminProjectPage({
   params,
