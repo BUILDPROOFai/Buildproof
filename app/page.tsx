@@ -29,7 +29,6 @@ export default async function Home() {
     .eq("file_type", "photo")
     .order("created_at", { ascending: false });
 
-  // Most recent photo per project becomes its directory cover image.
   const coverByProject = new Map<string, { url: string; level: number }>();
   ((photoEvidence as { project_id: string; file_url: string; verification_level: number }[] | null) ?? []).forEach(
     (e) => {
