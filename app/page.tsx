@@ -85,14 +85,14 @@ export default async function Home() {
                   dated evidence — not just a developer&apos;s word for it.
                 </p>
                 <div className="flex flex-wrap gap-3 mt-9">
-                  
-                  <a  href="#projects"
+                  <a
+                    href="#projects"
                     className="bg-seal text-white px-7 py-3.5 rounded-full font-medium text-sm hover:bg-seal/90 hover:-translate-y-0.5 transition-all"
                   >
                     Browse projects
                   </a>
-                  
-                   <a href="mailto:Offplanadvisory@gmail.com?subject=Get%20my%20project%20verified"
+                  <a
+                    href="mailto:Offplanadvisory@gmail.com?subject=Get%20my%20project%20verified"
                     className="border border-line bg-white px-7 py-3.5 rounded-full font-medium text-sm text-ink hover:border-ink/20 hover:-translate-y-0.5 transition-all"
                   >
                     Developer? Get verified
