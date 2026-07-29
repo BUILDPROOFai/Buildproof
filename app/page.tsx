@@ -1,5 +1,5 @@
 import Nav from "@/components/Nav";
-import VerifiedBadge from "@/components/VerifiedBadge";
+import ProjectCarousel3D from "@/components/ProjectCarousel3D";
 import ProjectDirectory from "@/components/ProjectDirectory";
 import Reveal from "@/components/Reveal";
 import { createClient } from "@/lib/supabase/server";
@@ -29,6 +29,7 @@ export default async function Home() {
     .eq("file_type", "photo")
     .order("created_at", { ascending: false });
 
+  // Most recent photo per project becomes its directory cover image.
   const coverByProject = new Map<string, { url: string; level: number }>();
   ((photoEvidence as { project_id: string; file_url: string; verification_level: number }[] | null) ?? []).forEach(
     (e) => {
@@ -63,7 +64,7 @@ export default async function Home() {
     <>
       <Nav />
       <main>
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden border-b border-line">
           <div
             className="absolute -top-32 -right-40 w-[36rem] h-[36rem] rounded-full opacity-[0.15] blur-3xl pointer-events-none animate-[pulse_8s_ease-in-out_infinite]"
             style={{ background: "radial-gradient(circle, #3457E0 0%, transparent 70%)" }}
@@ -72,38 +73,37 @@ export default async function Home() {
             className="absolute -top-10 left-1/3 w-[28rem] h-[28rem] rounded-full opacity-[0.10] blur-3xl pointer-events-none animate-[pulse_10s_ease-in-out_infinite]"
             style={{ background: "radial-gradient(circle, #17A34A 0%, transparent 70%)" }}
           />
+          <p className="label text-center pt-8 text-seal relative">Drag to explore</p>
+          <ProjectCarousel3D
+            projects={directoryProjects.map((p) => ({ id: p.id, slug: p.slug, name: p.name, coverPhoto: p.coverPhoto }))}
+          />
+        </section>
 
-          <div className="max-w-5xl mx-auto px-6 pt-20 pb-16 relative">
-            <div className="grid md:grid-cols-[1fr_auto] gap-10 items-center">
-              <Reveal>
-                <p className="label mb-5 text-seal">Construction progress verification</p>
-                <h1 className="font-display text-4xl md:text-6xl font-semibold tracking-tight max-w-xl leading-[1.05] text-ink">
-                  Every claim of progress, backed by proof.
-                </h1>
-                <p className="text-muted max-w-lg mt-6 text-lg leading-relaxed">
-                  Browse off-plan and under-construction projects with structured,
-                  dated evidence — not just a developer&apos;s word for it.
-                </p>
-                <div className="flex flex-wrap gap-3 mt-9">
-                  <a
-                    href="#projects"
-                    className="bg-seal text-white px-7 py-3.5 rounded-full font-medium text-sm hover:bg-seal/90 hover:-translate-y-0.5 transition-all"
-                  >
-                    Browse projects
-                  </a>
-                  <a
-                    href="mailto:Offplanadvisory@gmail.com?subject=Get%20my%20project%20verified"
-                    className="border border-line bg-white px-7 py-3.5 rounded-full font-medium text-sm text-ink hover:border-ink/20 hover:-translate-y-0.5 transition-all"
-                  >
-                    Developer? Get verified
-                  </a>
-                </div>
-              </Reveal>
-              <Reveal delay={200}>
-                <VerifiedBadge className="w-28 h-28 shrink-0 text-seal hidden md:block" />
-              </Reveal>
+        <section className="max-w-5xl mx-auto px-6 py-16 border-b border-line">
+          <Reveal>
+            <p className="label mb-5 text-seal">Construction progress verification</p>
+            <h1 className="font-display text-4xl md:text-6xl font-semibold tracking-tight max-w-xl leading-[1.05] text-ink">
+              Every claim of progress, backed by proof.
+            </h1>
+            <p className="text-muted max-w-lg mt-6 text-lg leading-relaxed">
+              Browse off-plan and under-construction projects with structured,
+              dated evidence — not just a developer&apos;s word for it.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-9">
+              <a
+                href="#projects"
+                className="bg-seal text-white px-7 py-3.5 rounded-full font-medium text-sm hover:bg-seal/90 hover:-translate-y-0.5 transition-all"
+              >
+                Browse projects
+              </a>
+              <a
+                href="mailto:Offplanadvisory@gmail.com?subject=Get%20my%20project%20verified"
+                className="border border-line bg-white px-7 py-3.5 rounded-full font-medium text-sm text-ink hover:border-ink/20 hover:-translate-y-0.5 transition-all"
+              >
+                Developer? Get verified
+              </a>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         <section id="projects" className="max-w-5xl mx-auto px-6 py-14 border-t border-line">
