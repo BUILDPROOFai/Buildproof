@@ -19,6 +19,10 @@ function timeAgo(dateString: string) {
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
   const supabase = createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { data: projectData } = await supabase
     .from("projects")
     .select("*")
@@ -42,7 +46,9 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     .order("created_at", { ascending: false });
   const evidence = (evidenceData as Evidence[] | null) ?? [];
 
-  const heroPhoto = evidence.find((e) => e.file_type === "photo");
+  // Renders (what the company intends to build) are the public hero.
+  // Progress photos live behind login, further down.
+  const heroImage = project.cover_image_url ?? evidence.find((e) => e.file_type === "photo")?.file_url;
   const lastUpdated = evidence[0]?.created_at;
   const highestVerification = evidence.length
     ? Math.max(...evidence.map((e) => e.verification_level))
@@ -53,10 +59,10 @@ export default async function ProjectPage({ params }: { params: { slug: string }
       <Nav />
       <main className="max-w-5xl mx-auto px-6 py-12">
         <Reveal>
-          {heroPhoto ? (
+          {heroImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={heroPhoto.file_url}
+              src={heroImage}
               alt={project.name}
               className="w-full aspect-[16/8] object-cover rounded-2xl mb-6"
             />
@@ -91,49 +97,66 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           </div>
         </Reveal>
 
-        <div className="space-y-14">
-          {milestones.map((m, i) => {
-            const milestoneEvidence = evidence.filter((e) => e.milestone_id === m.id);
-            return (
-              <Reveal key={m.id}>
-                <p className="label mb-2">
-                  {String(i + 1).padStart(2, "0")} — {m.status.replace("_", " ")}
-                </p>
-                <h2 className="font-display text-xl font-semibold text-ink mb-4">{m.name}</h2>
+        {!user ? (
+          <Reveal>
+            <div className="card p-8 text-center max-w-lg mx-auto">
+              <p className="font-display text-xl font-semibold text-ink mb-2">
+                See the actual construction progress
+              </p>
+              <p className="text-sm text-muted mb-6">
+                Sign in to view the full milestone-by-milestone evidence log — dated photos,
+                verification levels, and everything backing this project&apos;s progress claims.
+              </p>
+              <a href={`/login?next=/project/${project.slug}`} className="inline-block bg-seal text-white px-7 py-3 rounded-full font-medium text-sm hover:bg-seal/90 transition-colors">
+                Sign in to view details
+              </a>
+            </div>
+          </Reveal>
+        ) : (
+          <div className="space-y-14">
+            {milestones.map((m, i) => {
+              const milestoneEvidence = evidence.filter((e) => e.milestone_id === m.id);
+              return (
+                <Reveal key={m.id}>
+                  <p className="label mb-2">
+                    {String(i + 1).padStart(2, "0")} — {m.status.replace("_", " ")}
+                  </p>
+                  <h2 className="font-display text-xl font-semibold text-ink mb-4">{m.name}</h2>
 
-                {milestoneEvidence.length > 0 ? (
-                  <div className="space-y-4">
-                    {milestoneEvidence.map((e) => (
-                      <div key={e.id}>
-                        {e.file_type === "photo" ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={e.file_url}
-                            alt={e.caption ?? m.name}
-                            className="w-full aspect-[16/9] object-cover rounded-xl mb-2 hover:scale-[1.01] transition-transform duration-200"
-                          />
-                        ) : (
-                          <div className="w-full aspect-[16/9] rounded-xl mb-2 bg-panel border border-line flex items-center justify-center text-sm text-muted">
-                            {e.file_type}
-                          </div>
-                        )}
-                        <p className="text-sm text-muted">
-                          {e.caption && <span className="text-ink">{e.caption} · </span>}
-                          {timeAgo(e.created_at)} · {VERIFICATION_LEVEL_LABELS[e.verification_level]}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted">No evidence uploaded for this stage yet.</p>
-                )}
-              </Reveal>
-            );
-          })}
-          {milestones.length === 0 && (
-            <p className="text-sm text-muted">No milestones added yet.</p>
-          )}
-        </div>
+                  {milestoneEvidence.length > 0 ? (
+                    <div className="space-y-4">
+                      {milestoneEvidence.map((e) => (
+                        <div key={e.id}>
+                          {e.file_type === "photo" ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={e.file_url}
+                              alt={e.caption ?? m.name}
+                              className="w-full aspect-[16/9] object-cover rounded-xl mb-2 hover:scale-[1.01] transition-transform duration-200"
+                            />
+                          ) : (
+                            <div className="w-full aspect-[16/9] rounded-xl mb-2 bg-panel border border-line flex items-center justify-center text-sm text-muted">
+                              {e.file_type}
+                            </div>
+                          )}
+                          <p className="text-sm text-muted">
+                            {e.caption && <span className="text-ink">{e.caption} · </span>}
+                            {timeAgo(e.created_at)} · {VERIFICATION_LEVEL_LABELS[e.verification_level]}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted">No evidence uploaded for this stage yet.</p>
+                  )}
+                </Reveal>
+              );
+            })}
+            {milestones.length === 0 && (
+              <p className="text-sm text-muted">No milestones added yet.</p>
+            )}
+          </div>
+        )}
       </main>
     </>
   );
