@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Nav from "@/components/Nav";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  // Buyers arrive here from a gated project page (?next=/project/slug) and
+  // should land back on it after signing in, instead of a generic page.
+  const next = searchParams.get("next") || "/";
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -29,9 +34,9 @@ export default function LoginPage() {
         return;
       }
     } else {
-      // Signing up here just creates an account — it does NOT grant admin access.
-      // Admin access is always granted manually in Supabase (Table Editor -> profiles),
-      // never through this form, on purpose.
+      // Signing up here just creates a normal account (defaults to the "buyer"
+      // role). It does NOT grant admin access — that's always assigned
+      // manually in Supabase (Table Editor -> profiles), never through this form.
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -44,7 +49,7 @@ export default function LoginPage() {
       }
     }
 
-    router.push("/admin");
+    router.push(next);
     router.refresh();
   }
 
@@ -52,7 +57,7 @@ export default function LoginPage() {
     <>
       <Nav />
       <main className="max-w-sm mx-auto px-6 py-20">
-        <p className="label mb-2">Internal team access</p>
+        <p className="label mb-2">BuildProof account</p>
         <h1 className="font-display text-2xl font-semibold text-ink mb-8">
           {mode === "signin" ? "Sign in" : "Create an account"}
         </h1>
