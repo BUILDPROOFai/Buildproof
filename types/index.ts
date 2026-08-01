@@ -33,6 +33,7 @@ export interface Project {
   delivery_timeline: string | null;
   status: ProjectStatus;
   risk_level: RiskLevel;
+  cover_image_url: string | null;
   created_at: string;
 }
 
