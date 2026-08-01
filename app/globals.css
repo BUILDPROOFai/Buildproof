@@ -29,6 +29,13 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .reveal-el {
+    transition-property: opacity !important;
+    transform: none !important;
+  }
+}
+
 @layer components {
   .label {
     @apply font-mono text-xs uppercase tracking-widest text-muted;
