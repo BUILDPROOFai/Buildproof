@@ -41,7 +41,7 @@ export default async function Home() {
 
   const directoryProjects = projects.map((p) => ({
     ...p,
-    coverPhoto: coverByProject.get(p.id)?.url,
+    coverPhoto: p.cover_image_url ?? coverByProject.get(p.id)?.url,
     coverVerification: coverByProject.get(p.id)?.level,
   }));
 
@@ -90,16 +90,10 @@ export default async function Home() {
               dated evidence — not just a developer&apos;s word for it.
             </p>
             <div className="flex flex-wrap gap-3 mt-9">
-              <a
-                href="#projects"
-                className="bg-seal text-white px-7 py-3.5 rounded-full font-medium text-sm hover:bg-seal/90 hover:-translate-y-0.5 transition-[background-color,transform]"
-              >
+              <a href="#projects" className="bg-seal text-white px-7 py-3.5 rounded-full font-medium text-sm hover:bg-seal/90 hover:-translate-y-0.5 transition-[background-color,transform]">
                 Browse projects
               </a>
-              <a
-                href="mailto:Offplanadvisory@gmail.com?subject=Get%20my%20project%20verified"
-                className="border border-line bg-white px-7 py-3.5 rounded-full font-medium text-sm text-ink hover:border-ink/20 hover:-translate-y-0.5 transition-[border-color,transform]"
-              >
+              <a href="mailto:Offplanadvisory@gmail.com?subject=Get%20my%20project%20verified" className="border border-line bg-white px-7 py-3.5 rounded-full font-medium text-sm text-ink hover:border-ink/20 hover:-translate-y-0.5 transition-[border-color,transform]">
                 Developer? Get verified
               </a>
             </div>
