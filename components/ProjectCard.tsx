@@ -14,7 +14,10 @@ export default function ProjectCard({ project }: { project: Project }) {
   const risk = RISK_STYLES[project.risk_level];
 
   return (
-    <Link href={`/project/${project.slug}`} className="card block p-5 hover:border-line/80 transition-colors">
+    <Link
+      href={`/project/${project.slug}`}
+      className="card block p-5 hover:border-line/80 hover:-translate-y-1 hover:shadow-md hover:shadow-ink/[0.06] transition-[border-color,transform,box-shadow] duration-300"
+    >
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-medium">{project.name}</h3>
