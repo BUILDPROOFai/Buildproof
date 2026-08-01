@@ -5,6 +5,8 @@ import type { Project, Milestone, Evidence, Profile } from "@/types";
 import { VERIFICATION_LEVEL_LABELS } from "@/types";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelect";
 import EvidenceUploadForm from "@/components/EvidenceUploadForm";
+import CoverImageUpload from "@/components/CoverImageUpload";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminProjectPage({
@@ -71,12 +73,13 @@ export default async function AdminProjectPage({
       <main className="max-w-5xl mx-auto px-6 py-16">
         <p className="label mb-2">Admin · {project.name}</p>
         <h1 className="font-display text-2xl font-semibold text-ink mb-1">{project.name}</h1>
-        <a
-          href={`/project/${project.slug}`}
-          className="text-sm text-seal hover:underline"
-        >
+        <a href={`/project/${project.slug}`} className="text-sm text-seal hover:underline">
           View public page →
         </a>
+
+        <div className="mt-8">
+          <CoverImageUpload projectId={project.id} currentUrl={project.cover_image_url} />
+        </div>
 
         <div className="grid md:grid-cols-2 gap-8 mt-10">
           <div>
